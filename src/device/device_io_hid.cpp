@@ -31,6 +31,7 @@
 #include <boost/scope_exit.hpp>
 #include "log.hpp"
 #include "device_io_hid.hpp"
+#include "misc_log_ex.h"
 
 namespace hw {
   namespace io {
@@ -298,6 +299,9 @@ namespace hw {
       //check hid header
       val = (data[offset]<<8) + data[offset+1];
       offset += 2;
+      if (val != this->channel)
+        MGUSER_RED("Failed to communicate with the device. Corrupted HID header." << ENDL << "Please try unplugging it and restarting");
+      
       ASSERT_X(val == this->channel, "Wrong Channel");
       val =  data[offset];
       offset++;
@@ -324,6 +328,9 @@ namespace hw {
         }
         val = (data[offset]<<8) + data[offset+1];
         offset += 2;
+        if (val != this->channel)
+          MGUSER_RED("Failed to communicate with the device. Corrupted HID header." << ENDL << "Please try unplugging it and restarting");
+          
         ASSERT_X(val == this->channel, "Wrong Channel");
         val =  data[offset];
         offset++;
